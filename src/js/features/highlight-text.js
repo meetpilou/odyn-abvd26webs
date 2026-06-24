@@ -58,7 +58,6 @@ export function initHighlightText(scope = document) {
               autoAlpha: 1,
               stagger: staggerValue,
               ease: "linear",
-              onComplete: () => instance.revert(),
             });
         }, el);
 
