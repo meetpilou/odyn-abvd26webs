@@ -20,7 +20,7 @@ import {
   runPageOnceAnimation,
   runPageLeaveAnimation,
   runPageEnterAnimation,
-} from "./transitions.js";
+} from "./barba-transitions.js";
 
 import { applyThemeFrom } from "./theme.js";
 
@@ -40,15 +40,15 @@ let nextPage = document;
 function resetWebflow() {
   // Re-init Webflow forms on the new page
   if (window.Webflow && window.Webflow.require) {
-    const ix2 = window.Webflow?.require('ix2');
+    const ix2 = window.Webflow?.require("ix2");
     if (ix2) {
       ix2.init();
     }
     // Destroy and re-init the forms module
-    const forms = window.Webflow?.require('commerce') || null;
+    const forms = window.Webflow?.require("commerce") || null;
     window.Webflow?.destroy();
     window.Webflow?.ready();
-    window.Webflow?.require('ix2')?.init();
+    window.Webflow?.require("ix2")?.init();
   }
 }
 
@@ -141,7 +141,10 @@ function initBarba(features = {}) {
         },
 
         async leave(data) {
-          return runPageLeaveAnimation(data.current.container, data.next.container);
+          return runPageLeaveAnimation(
+            data.current.container,
+            data.next.container
+          );
         },
 
         async enter(data) {
