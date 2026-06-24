@@ -4,7 +4,9 @@
  * @description Finds all [data-footer-parallax] elements and sets up a scrubbed GSAP
  * ScrollTrigger timeline for each one, but only on desktop (via gsap.matchMedia). On mobile
  * the parallax shift would push the footer past the viewport, so it is disabled and the
- * elements are left in their natural, fully visible state. Reduced motion also skips it.
+ * elements are reset to their natural, fully visible state. Reduced motion also skips it.
+ * A cleanup function is returned from the matchMedia callback to explicitly kill the
+ * ScrollTrigger + timeline when leaving the desktop condition.
  */
 
 import { MEDIAQUERIES } from "../core/config.js";
@@ -29,18 +31,17 @@ export function initFooterParallax(scope = document) {
 
     const inner = element.querySelector("[data-footer-parallax-inner]");
     const dark = element.querySelector("[data-footer-parallax-dark]");
+    const layers = [inner, dark].filter(Boolean);
 
     const mm = gsap.matchMedia();
 
     mm.add(MEDIAQUERIES, (context) => {
       const { isReducedMotion, isDesktop } = context.conditions;
 
-      // Mobile / reduced motion: no parallax. Clear any inline state left by a
-      // previous desktop run so the inner layer isn't shifted and the full
-      // footer stays visible. matchMedia also auto-reverts the timeline and kills
-      // its ScrollTrigger when leaving the desktop condition.
+      // Mobile / reduced motion: no parallax. Reset the layers so the inner
+      // content isn't shifted and the full footer stays visible.
       if (isReducedMotion || !isDesktop) {
-        gsap.set([inner, dark].filter(Boolean), { clearProps: "all" });
+        gsap.set(layers, { clearProps: "all" });
         return;
       }
 
@@ -63,6 +64,16 @@ export function initFooterParallax(scope = document) {
       if (dark) {
         tl.from(dark, { opacity: 1, ease: "linear" }, "<");
       }
+
+      // Cleanup — runs when this condition STOPS matching (e.g. desktop -> mobile).
+      // With the conditions-object form, GSAP does not auto-revert the
+      // ScrollTrigger between condition changes, so we kill it explicitly and
+      // reset the layers to their natural position.
+      return () => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+        gsap.set(layers, { clearProps: "all" });
+      };
     });
   });
 }
