@@ -2,19 +2,16 @@
  * @file footer-parallax.js
  * @summary Initializes scroll-driven parallax animations for footer sections.
  * @description Finds all [data-footer-parallax] elements and sets up a scrubbed GSAP
- * ScrollTrigger timeline for each one, but only on desktop (via gsap.matchMedia). On mobile
- * the parallax shift would push the footer past the viewport, so it is disabled and the
- * elements are reset to their natural, fully visible state. Reduced motion also skips it.
- * A cleanup function is returned from the matchMedia callback to explicitly kill the
- * ScrollTrigger + timeline when leaving the desktop condition.
+ * ScrollTrigger timeline for each one — but only while the footer fits within the viewport
+ * height. When the footer is taller than the viewport, the upward parallax shift would push
+ * content out of view, so the effect is disabled and the layers reset to their natural state.
+ * The condition is re-evaluated on resize. Reduced motion also disables it.
  */
-
-import { MEDIAQUERIES } from "../core/config.js";
 
 /**
  * Finds all [data-footer-parallax] elements within the given scope and attaches
- * a scrubbed GSAP timeline that drives a vertical parallax on the inner layer
- * and a simultaneous fade on the dark overlay — desktop only.
+ * a scrubbed GSAP timeline (inner layer parallax + dark overlay fade) that is
+ * only active when the footer is no taller than the viewport.
  *
  * @param {Document|HTMLElement} [scope=document] - The DOM element within which to search.
  */
@@ -23,8 +20,10 @@ export function initFooterParallax(scope = document) {
   const elements = scope.querySelectorAll("[data-footer-parallax]");
   if (!elements.length) return;
 
+  const reduceMotionMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+
   elements.forEach((element) => {
-    // Idempotent init: don't stack a second matchMedia / ScrollTrigger on the
+    // Idempotent init: don't attach a second timeline / resize listener on the
     // same element if this module is re-invoked (e.g. framework resize hooks).
     if (element._footerParallaxInit) return;
     element._footerParallaxInit = true;
@@ -33,20 +32,13 @@ export function initFooterParallax(scope = document) {
     const dark = element.querySelector("[data-footer-parallax-dark]");
     const layers = [inner, dark].filter(Boolean);
 
-    const mm = gsap.matchMedia();
+    let tl = null;
 
-    mm.add(MEDIAQUERIES, (context) => {
-      const { isReducedMotion, isDesktop } = context.conditions;
-
-      // Mobile / reduced motion: no parallax. Reset the layers so the inner
-      // content isn't shifted and the full footer stays visible.
-      if (isReducedMotion || !isDesktop) {
-        gsap.set(layers, { clearProps: "all" });
-        return;
-      }
+    function enable() {
+      if (tl) return;
 
       // Scrubbed timeline tied to the footer entering the bottom of the viewport
-      const tl = gsap.timeline({
+      tl = gsap.timeline({
         scrollTrigger: {
           trigger: element,
           start: "clamp(top bottom)",
@@ -64,16 +56,39 @@ export function initFooterParallax(scope = document) {
       if (dark) {
         tl.from(dark, { opacity: 1, ease: "linear" }, "<");
       }
+    }
 
-      // Cleanup — runs when this condition STOPS matching (e.g. desktop -> mobile).
-      // With the conditions-object form, GSAP does not auto-revert the
-      // ScrollTrigger between condition changes, so we kill it explicitly and
-      // reset the layers to their natural position.
-      return () => {
-        tl.scrollTrigger?.kill();
-        tl.kill();
-        gsap.set(layers, { clearProps: "all" });
-      };
-    });
+    function disable() {
+      if (!tl) return;
+      tl.scrollTrigger?.kill();
+      tl.kill();
+      tl = null;
+      // Reset the layers so nothing is left shifted / faded.
+      gsap.set(layers, { clearProps: "all" });
+    }
+
+    // Enable the parallax only when the footer fits within the viewport height.
+    // As soon as the footer is taller than the viewport, the upward shift would
+    // hide content, so disable it. Reduced motion disables it too.
+    function update() {
+      const tooTall = element.offsetHeight > window.innerHeight;
+      if (reduceMotionMQ.matches || tooTall) {
+        disable();
+      } else {
+        enable();
+      }
+    }
+
+    // Debounce resize so we don't create/kill the ScrollTrigger on every frame.
+    let resizeId;
+    function onResize() {
+      clearTimeout(resizeId);
+      resizeId = setTimeout(update, 150);
+    }
+
+    update();
+    window.addEventListener("resize", onResize);
+    window.addEventListener("load", update);
+    reduceMotionMQ.addEventListener("change", update);
   });
 }
