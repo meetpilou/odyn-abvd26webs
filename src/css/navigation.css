@@ -1,0 +1,382 @@
+/* ------------------------------------------------------------------- */
+/* Navigation */
+/* ------------------------------------------------------------------- */
+
+.nav-wrapper {
+  transform: translateY(0%) rotate(0.001deg);
+
+  :is(.wf-design-mode) & {
+    overflow: hidden;
+  }
+}
+
+/* Shrink nav when scrolling started */
+[data-scrolling-started="true"] .nav-wrapper {
+  transition: transform var(--animation-default-slow);
+  will-change: transform;
+}
+
+/* Move nav out of window when scrolling down */
+[data-scrolling-started="true"][data-scrolling-direction="down"] .nav-wrapper {
+  transform: translateY(-102%) rotate(0.001deg);
+}
+
+/* Theme */
+
+[data-theme-nav="light"] {
+  color: var(--_color---neutral--white);
+
+  @media screen and (max-width: 991px) {
+    &[data-menu-status="open"] {
+      color: var(--_color---neutral--black);
+    }
+  }
+
+  @media screen and (min-width: 992px) {
+    & .nav-link_bg {
+      background-color: var(--_color---neutral--dark-gray-1);
+    }
+  }
+
+  & [data-dropdown-toggle="True"] {
+    /* Background du lien actif */
+    & .nav-link_bg,
+    :is(.wf-design-mode, .wf-editor) & .nav-link_bg {
+      background-color: var(--_color---neutral--black);
+    }
+  }
+}
+
+/* Transitions */
+
+.page-bg {
+  transition: opacity var(--animation-shrink);
+  will-change: opacity;
+}
+
+.nav {
+  transition: color var(--animation-default-fast);
+  will-change: color;
+}
+
+.nav-bg {
+  transition: height var(--animation-default-fast);
+  will-change: height;
+}
+
+.nav-center {
+  transition: opacity var(--animation-default);
+  will-change: opacity;
+}
+
+.nav-link_icon {
+  transition: transform var(--animation-default-fast);
+  will-change: transform;
+}
+
+.nav-link_bg {
+  transition: background-color var(--animation-default-fast);
+  will-change: background-color;
+}
+
+.nav-dropdown {
+  transition:
+    opacity var(--animation-default),
+    bottom var(--animation-default);
+  will-change: opacity, bottom, pointer-events;
+}
+
+.nav-dropdown_overflow {
+  transition:
+    visibility var(--animation-default),
+    grid-template-rows var(--animation-default);
+  will-change: visibility, grid-template-rows;
+}
+
+.menu-dropdown_overflow {
+  transition: grid-template-rows var(--animation-default);
+  will-change: grid-template-rows;
+}
+
+.nav-menu-item {
+  transition:
+    opacity var(--animation-default),
+    margin-left var(--animation-default);
+  will-change: opacity, margin-left;
+
+  /* Staggered transition delays pour l'animation d'entrée des items */
+  &:nth-child(2) {
+    transition-delay: 0.24s;
+  }
+
+  &:nth-child(3) {
+    transition-delay: 0.3s;
+  }
+
+  &:nth-child(4) {
+    transition-delay: 0.36s;
+  }
+
+  &:nth-child(5) {
+    transition-delay: 0.42s;
+  }
+
+  &:nth-child(6) {
+    transition-delay: 0.48s;
+  }
+
+  &:nth-child(7) {
+    transition-delay: 0.52s;
+  }
+
+  &:nth-child(8) {
+    transition-delay: 0.58s;
+  }
+
+  &:nth-child(9) {
+    transition-delay: 0.64s;
+  }
+
+  &:nth-child(10) {
+    transition-delay: 0.7s;
+  }
+}
+
+.nav-menu-item_link {
+  transition: transform var(--animation-default-fast);
+  will-change: transform;
+}
+
+.nav-menu-item_bg {
+  transition:
+    opacity var(--animation-default-fast),
+    width var(--animation-default-fast);
+  will-change: opacity, width;
+}
+
+.nav-menu-item_dropdown {
+  transition:
+    opacity var(--animation-default-fast),
+    visibility var(--animation-default-fast);
+  will-change: opacity, visibility;
+}
+
+.nav-submenu-item_link {
+  transition: transform var(--animation-default-fast);
+  will-change: transform;
+
+  &.w--current {
+    color: var(--_color---neutral--mid-gray-1);
+    cursor: disabled;
+    pointer-events: none;
+  }
+
+  /* Hover sur le submenu item — slide + icône */
+  &:is(:hover, :focus-visible, :focus-within),
+  &.w--current {
+    transform: translateX(0);
+
+    & .nav-submenu-item_icon {
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+  }
+}
+
+.nav-submenu-item_icon {
+  transform: rotate(-30deg);
+  transition:
+    opacity var(--animation-default-fast),
+    transform var(--animation-default-fast);
+}
+
+/* ------------------------------------------------------------------- */
+/* Dropdown toggle — état actif */
+/* Ne peut pas être nesté dans .nav-link car le + cible un sibling */
+/* ------------------------------------------------------------------- */
+
+[data-dropdown-toggle="True"] {
+  /* Rotation de l'icône quand le dropdown est ouvert */
+  & .nav-link_icon,
+  :is(.wf-design-mode, .wf-editor) & .nav-link_icon {
+    transform: rotate(180deg);
+  }
+
+  /* Background du lien actif */
+  & .nav-link_bg,
+  :is(.wf-design-mode, .wf-editor) & .nav-link_bg {
+    background-color: hsla(0, 0%, 100%, 0.7);
+  }
+
+  /* Dropdown visible quand toggle actif */
+  & + .nav-dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+
+    /* Expansion de l'overflow */
+    & .nav-dropdown_overflow {
+      grid-template-rows: 1fr;
+    }
+
+    /* Items visibles avec dropdown ouvert */
+    & .nav-menu-item {
+      margin-left: 0;
+      opacity: 1;
+    }
+
+    /* Desktop — position bottom */
+    @media screen and (min-width: 992px) {
+      bottom: 0;
+    }
+  }
+}
+
+/* Hover sur nav-link (hors toggle) */
+a.nav-link:hover .nav-link_bg {
+  background-color: hsla(0, 0%, 100%, 0.3);
+}
+
+/* Items visibles en canvas Webflow */
+:is(.wf-design-mode, .wf-editor) .nav-dropdown .nav-menu-item {
+  margin-left: 0;
+  opacity: 1;
+}
+
+/* Items visibles quand un dropdown est ouvert (state global sur body) */
+body[data-dropdown-state="open"] .page-bg,
+:is(.wf-design-mode, .wf-editor) body[data-dropdown-state="open"] .page-bg {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------- */
+/* Submenu toggle (level 2) */
+/* ------------------------------------------------------------------- */
+
+[data-submenu-toggle="True"] {
+  /* Background actif sur le lien parent */
+  & .nav-menu-item_bg {
+    opacity: 1;
+    width: 100%;
+  }
+
+  /* Submenu visible — card-body et canvas inclus */
+
+  & + .nav-menu-item_dropdown,
+  .card-body & + .nav-menu-item_dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  /* Desktop — slide du lien parent quand submenu ouvert */
+  @media screen and (min-width: 992px) {
+    transform: translateX(1rem);
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Nav link hover (desktop, level 1 sans submenu) */
+/* ------------------------------------------------------------------- */
+
+.nav-menu-item_link.w--current {
+  & .nav-menu-item_bg {
+    opacity: 0.5;
+    width: 100%;
+    background-color: var(--theme--accent);
+  }
+}
+
+.nav-menu-item_link:not([data-submenu-toggle="True"]) {
+  @media screen and (min-width: 992px) {
+    &:is(:hover, :focus-visible, :focus-within) {
+      transform: translateX(0.5rem);
+
+      & .nav-menu-item_bg {
+        opacity: 1;
+        width: 2px;
+      }
+    }
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Overflow expansions partagées — canvas + card-body */
+/* Pas nestable : sélecteurs sans ancêtre commun */
+/* ------------------------------------------------------------------- */
+
+.card-body .nav-dropdown_overflow,
+:is(.wf-design-mode, .wf-editor) .nav-dropdown_overflow {
+  grid-template-rows: 1fr;
+}
+
+/* ------------------------------------------------------------------- */
+/* Mobile */
+/* ------------------------------------------------------------------- */
+
+@media screen and (max-width: 991px) {
+  .nav-center {
+    will-change: transform, opacity;
+  }
+
+  /* Expansion des dropdowns sur mobile */
+  .card-body .nav-dropdown_overflow,
+  .card-body > .nav-menu-item_dropdown .menu-dropdown_overflow,
+  [data-dropdown-toggle="True"] + .nav-dropdown .nav-dropdown_overflow,
+  [data-submenu-toggle="True"]
+    + .nav-menu-item_dropdown
+    .menu-dropdown_overflow {
+    grid-template-rows: 1fr;
+  }
+
+  /* Burger menu ouvert */
+
+  [data-menu-status="open"] {
+    & .menu-button_line:nth-of-type(1) {
+      transform: translate(0px, 0.125em) rotate(135deg);
+      background-color: #fff;
+    }
+
+    & .menu-button_line:nth-of-type(2) {
+      transform: translate(0px, -0.175em) rotate(-135deg);
+      background-color: #fff;
+    }
+
+    & .nav-bg {
+      height: 100svh;
+    }
+
+    & .page-bg {
+      opacity: 1;
+    }
+
+    & .nav-center {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(0);
+      visibility: visible;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Canvas / Designer overrides */
+/* ------------------------------------------------------------------- */
+
+.card-body .nav-menu-item,
+:is(.wf-design-mode, .wf-editor) .nav-menu-item {
+  margin-left: 0;
+  opacity: 1;
+}
+
+:is(.wf-design-mode, .wf-editor) .global-before .nav-dropdown-component * {
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+@media screen and (max-width: 991px) {
+  :is(.wf-design-mode, .wf-editor) .global-before .nav-center * {
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+}

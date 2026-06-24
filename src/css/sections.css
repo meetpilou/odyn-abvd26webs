@@ -1,0 +1,28 @@
+/* ------------------------------------------------------------------- */
+/* Section with background-color */
+/* ------------------------------------------------------------------- */
+
+.section {
+  overflow: clip;
+}
+
+.section[data-section-bg="True"] {
+  --theme--text: var(--_color---neutral--dark-gray-1);
+  color: var(--_color---neutral--dark-gray-1) !important;
+}
+
+.section.cc-full {
+  .img-component {
+    border-radius: 0;
+  }
+}
+
+.section.cc-no-background {
+  & .section__bg {
+    display: none;
+  }
+
+  & .theme-bend {
+    display: none;
+  }
+}

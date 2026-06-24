@@ -1,0 +1,44 @@
+/* ------------------------------------------------------------------- */
+/* Social Share */
+/* ------------------------------------------------------------------- */
+
+/* Clipboard Success Icon */
+
+[data-social-share-type="clipboard"] {
+  & .button-share__icon {
+    transition: transform var(--animation-default);
+    transform: translateY(0%) rotate(0.001deg);
+
+    &.cc-success {
+      color: #009e3b;
+      transform: translateY(200%) rotate(0.001deg);
+    }
+  }
+
+  &[data-social-share-success] {
+    .button-share__icon {
+      transform: translateY(-200%) rotate(0.001deg);
+
+      &.cc-success {
+        transform: translateY(0%) rotate(0.001deg);
+      }
+    }
+  }
+}
+
+/* Optional hover styling */
+
+[data-social-share-type] {
+  transition: all var(--animation-default);
+  transform: scale(1) rotate(0.001deg);
+
+  &:has([data-social-share-type]:hover) {
+    [data-social-share-type] {
+      transform: scale(0.9) rotate(0.001deg);
+
+      &:hover {
+        transform: scale(1.1) rotate(0.001deg);
+      }
+    }
+  }
+}

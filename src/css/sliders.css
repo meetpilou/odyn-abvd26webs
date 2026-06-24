@@ -1,0 +1,174 @@
+/* ------------------------------------------------------------------- */
+/* Gsap Slider */
+/* ------------------------------------------------------------------- */
+
+[data-gsap-slider-init] {
+  --slider-status: on;
+  --slider-spv: 3;
+  --slider-gap: var(--_layout---grid--gap-main);
+}
+
+/* Services */
+
+[data-gsap-slider-init="services"] {
+  --slider-status: off;
+}
+
+/* Team */
+
+[data-gsap-slider-init="team"] {
+  --slider-status: off;
+  --slider-spv: 4;
+}
+
+/* Cases */
+
+[data-gsap-slider-init="cases"] {
+  --slider-spv: 1.4;
+}
+
+/* Highlights on About */
+
+.highlights.cc-about {
+  & [data-gsap-slider-init="highlights"] {
+    --slider-spv: 2;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  [data-gsap-slider-init] {
+    --slider-status: on;
+    --slider-spv: 2.25;
+  }
+
+  /* Services */
+
+  [data-gsap-slider-init="services"] {
+    --slider-status: off;
+    --slider-spv: 2;
+  }
+
+  /* Team */
+
+  [data-gsap-slider-init="team"] {
+    --slider-status: on;
+    --slider-spv: 2.75;
+  }
+
+  /* Cases */
+
+  [data-gsap-slider-init="cases"] {
+    --slider-spv: 1.25;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  [data-gsap-slider-init] {
+    --slider-status: on;
+    --slider-spv: 1.02;
+  }
+
+  /* Services */
+
+  [data-gsap-slider-init="services"] {
+    --slider-status: off;
+    --slider-spv: 1;
+  }
+
+  /* Cases */
+
+  [data-gsap-slider-init="cases"] {
+    --slider-spv: 1.02;
+  }
+}
+
+/* Controls */
+
+[data-gsap-slider-control] {
+  transition: opacity var(--animation-ease);
+}
+
+[data-gsap-slider-control-status="not-active"] {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* Not Active */
+
+[data-gsap-slider-status="not-active"] {
+  & [data-gsap-slider-controls] {
+    display: none;
+  }
+
+  & [data-gsap-slider-item] {
+    margin-right: 0;
+  }
+
+  & [data-gsap-slider-list] {
+    flex-wrap: wrap;
+    gap: var(--slider-gap);
+  }
+}
+
+/* Cards */
+
+[data-gsap-slider-item] {
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+[data-gsap-slider-item-status="not-active"] {
+  & .gsap-slider__item {
+    opacity: 0.5;
+  }
+}
+
+/* Webflow Editor */
+
+:is(.wf-design-mode, .w-editor) {
+  & [data-gsap-slider-item] {
+    margin-right: 0;
+  }
+
+  & [data-gsap-slider-list] {
+    flex-wrap: wrap;
+    gap: var(--slider-gap);
+  }
+
+  & [data-gsap-slider-init] {
+    --slider-spv: 3;
+  }
+
+  & [data-gsap-slider-init="team"] {
+    --slider-spv: 4;
+  }
+
+  & [data-gsap-slider-init="cases"] {
+    --slider-spv: 1;
+  }
+
+  @media screen and (max-width: 991px) {
+    & [data-gsap-slider-init] {
+      --slider-spv: 2;
+    }
+
+    & [data-gsap-slider-init="cases"] {
+      --slider-spv: 1;
+    }
+
+    & [data-gsap-slider-init="team"] {
+      --slider-spv: 2;
+    }
+
+    & [data-gsap-slider-init="highlights"] {
+      --slider-spv: 2;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    & [data-gsap-slider-init] {
+      --slider-spv: 1;
+    }
+  }
+}

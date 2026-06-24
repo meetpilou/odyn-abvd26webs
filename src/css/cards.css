@@ -1,0 +1,240 @@
+/* ------------------------------------------------------------------- */
+/* Card Pillar */
+/* ------------------------------------------------------------------- */
+
+:is(.wf-design-mode, .w-editor) {
+  .pillar-card {
+    position: relative;
+    top: 0;
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Card Highlight */
+/* ------------------------------------------------------------------- */
+
+.highlight-card {
+  transition: opacity var(--animation-default);
+
+  & img {
+    transition: transform var(--animation-shrink);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .highlight-card__link {
+    &:is(:hover, :focus-visible) {
+      & img {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Card Service */
+/* ------------------------------------------------------------------- */
+
+.service-card {
+  transition: opacity var(--animation-default);
+
+  & .service-card__bg {
+    transition: inset var(--animation-shrink);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .service-card__link {
+    &:is(:hover, :focus-visible) {
+      & .service-card__bg {
+        inset: var(--shrink-size);
+      }
+    }
+  }
+
+  /* Card service - siblings with reduced opacity */
+
+  :has(> .gsap-slider__item > .service-card:is(:hover, :focus-visible))
+    > .gsap-slider__item:not(:has(> .service-card:is(:hover, :focus-visible)))
+    > .service-card {
+    opacity: 0.4;
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Card Page */
+/* ------------------------------------------------------------------- */
+
+.page-card {
+  transition:
+    all var(--animation-shrink-slow),
+    opacity var(--animation-ease-slow);
+
+  & .page-card__img {
+    transition: transform var(--animation-shrink-slow);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .page-card {
+    &:is(:hover, :focus-visible) {
+      transform: scale(0.98);
+
+      & .page-card__img {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Card Article */
+/* ------------------------------------------------------------------- */
+
+.article-card {
+  transition:
+    all var(--animation-shrink),
+    opacity var(--animation-ease-slow);
+
+  & .article-card__media {
+    transition: opacity var(--animation-default);
+  }
+
+  & .article-card__img {
+    transition: transform var(--animation-shrink-slow);
+  }
+
+  & .article-card__footer {
+    transition: border-color var(--animation-default);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .article-card {
+    &:is(:hover, :focus-visible) {
+      transform: scale(0.98);
+
+      & .article-card__img {
+        transform: scale(1.05);
+      }
+
+      & .article-card__media {
+        opacity: 1;
+      }
+    }
+  }
+
+  /* Only for base variant */
+
+  .article-card[data-wf--cms---article-card--variant="default"] {
+    &:is(:hover, :focus-visible) {
+      color: var(--_color---neutral--white);
+
+      .article-card__footer {
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+
+  /* Siblings with reduced opacity */
+
+  :has(> .grid-articles__item > .article-card:is(:hover, :focus-visible))
+    > .grid-articles__item:not(:has(> .article-card:is(:hover, :focus-visible)))
+    > .article-card {
+    opacity: 0.5;
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Data Maximize = True on Parent */
+/* ------------------------------------------------------------------- */
+
+@media screen and (min-width: 768px) {
+  [data-maximize-first="True"] {
+    & .grid-articles__item:first-child {
+      grid-column: span 3;
+
+      & .article-card {
+        aspect-ratio: 1450/480;
+      }
+
+      & .article-card__footer,
+      & .article-card__media,
+      & .article-card__header {
+        width: calc(50% - 0.75rem);
+      }
+
+      & .article-card__text {
+        display: block;
+      }
+
+      & .article-card__media {
+        inset: 0;
+        bottom: 0.625rem;
+        left: auto;
+        opacity: 1;
+        position: absolute;
+        right: 0.625rem;
+        top: 0.625rem;
+      }
+
+      & .u-overlay-cover {
+        display: none;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  [data-maximize-first="True"] {
+    & .grid-articles__item:first-child {
+      grid-column: span 2 !important;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  [data-maximize-first="True"] .grid-articles__item:first-child {
+    & .article-card {
+      &:is(:hover, :focus-visible) {
+        color: var(--theme--surface-text);
+      }
+    }
+  }
+}
+
+/* ------------------------------------------------------------------- */
+/* Case Card */
+/* ------------------------------------------------------------------- */
+
+.case-card {
+  & .case-card__inner {
+    transition:
+      all var(--animation-shrink),
+      opacity var(--animation-ease-slow);
+  }
+
+  & .case-card__media {
+    transition: opacity var(--animation-default);
+  }
+
+  & .case-card__img {
+    transition: transform var(--animation-shrink-slow);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .case-card:is(:hover, :focus-visible) {
+    & .case-card__inner {
+      transform: scale(0.98);
+    }
+
+    & .case-card__img {
+      transform: scale(1.05);
+    }
+
+    & .case-card__media {
+      opacity: 1;
+    }
+  }
+}
